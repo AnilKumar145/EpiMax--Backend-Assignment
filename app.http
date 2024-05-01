@@ -8,6 +8,14 @@ Content-Type: application/json
   "username": "user123",
   "password_hash": "password123"
 }
+### Register User - POST /register
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+  "username": "user789",
+  "password_hash": "password789"
+}
 
 ### Login User - POST /login
 POST http://localhost:3000/login
@@ -21,7 +29,7 @@ Content-Type: application/json
 ### Create Task - POST /tasks
 POST http://localhost:3000/tasks
 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1c2VyMTIzIiwicGFzc3dvcmRfaGFzaCI6IiQyYiQxMCRERnhGenNRYmI3QTMzRmw4dktleUNleU56YmI0a2YyQUQ0bkhRaERXeEhIRVhDeGNoWThIdSIsImlhdCI6MTcxNDUzNzExNn0.A_9l5wQwGQ5fBpy3POkqEWcVk4RPiaZOv-PsZuxdsjg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1c2VyMTIzIiwicGFzc3dvcmRfaGFzaCI6IiQyYiQxMCRERnhGenNRYmI3QTMzRmw4dktleUNleU56YmI0a2YyQUQ0bkhRaERXeEhIRVhDeGNoWThIdSIsImlhdCI6MTcxNDU1Mjg0Mn0.aNts38V5Qv_A5Dz_SsAOEgusme4lwzodBOiQOofY4c4
 Content-Type: application/json
 
 {
@@ -35,11 +43,11 @@ Content-Type: application/json
 
 ### Get Task by ID - GET /tasks/:id
 GET http://localhost:3000/tasks/1
-Authorization: Bearer <jwt_token>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1c2VyMTIzIiwicGFzc3dvcmRfaGFzaCI6IiQyYiQxMCRERnhGenNRYmI3QTMzRmw4dktleUNleU56YmI0a2YyQUQ0bkhRaERXeEhIRVhDeGNoWThIdSIsImlhdCI6MTcxNDU1Mjg0Mn0.aNts38V5Qv_A5Dz_SsAOEgusme4lwzodBOiQOofY4c4
 
 ### Update Task by ID - PUT /tasks/:id
 PUT http://localhost:3000/tasks/1
-Authorization: Bearer <jwt_token>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1c2VyMTIzIiwicGFzc3dvcmRfaGFzaCI6IiQyYiQxMCRERnhGenNRYmI3QTMzRmw4dktleUNleU56YmI0a2YyQUQ0bkhRaERXeEhIRVhDeGNoWThIdSIsImlhdCI6MTcxNDU1Mjg0Mn0.aNts38V5Qv_A5Dz_SsAOEgusme4lwzodBOiQOofY4c4
 Content-Type: application/json
 
 {
@@ -52,5 +60,5 @@ Content-Type: application/json
 }
 
 ### Delete Task by ID - DELETE /tasks/:id
-DELETE http://localhost:3000/tasks/1
-Authorization: Bearer <jwt_token>
+DELETE http://localhost:3000/tasks/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1c2VyMTIzIiwicGFzc3dvcmRfaGFzaCI6IiQyYiQxMCRERnhGenNRYmI3QTMzRmw4dktleUNleU56YmI0a2YyQUQ0bkhRaERXeEhIRVhDeGNoWThIdSIsImlhdCI6MTcxNDU1Mjg0Mn0.aNts38V5Qv_A5Dz_SsAOEgusme4lwzodBOiQOofY4c4

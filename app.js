@@ -33,19 +33,17 @@ initializeDBAndServer();
 const authenticateToken = (request, response, next) => {
   let jwtToken;
   const authHeader = request.headers["authorization"];
-  if (authHeader !== undefined) {
-    jwtToken = authHeader.split(" ")[1];
-  }
-  if (jwtToken === undefined) {
+  if (!authHeader) {
     response.status(401);
     response.send("Invalid JWT Token");
   } else {
-    jwt.verify(jwtToken, "MY_SECRET_TOKEN", async (error, payload) => {
+    jwtToken = authHeader.split(" ")[1];
+    jwt.verify(jwtToken, "MY_SECRET_TOKEN", (error, payload) => {
       if (error) {
         response.status(401);
         response.send("Invalid JWT Token");
       } else {
-        request.payload = payload;
+        request.username = payload.username;
         next();
       }
     });
@@ -109,6 +107,7 @@ app.post("/login", async (request, response) => {
   }
 });
 
+// Create Task - POST /tasks
 app.post("/tasks", authenticateToken, async (request, response) => {
   const {
     title,
@@ -123,12 +122,14 @@ app.post("/tasks", authenticateToken, async (request, response) => {
   response.send("Created a Task");
 });
 
+// GET the Tasks
+
 app.get("/tasks", authenticateToken, async (request, response) => {
   const TaskQuery = `
         SELECT 
             * 
         FROM 
-            Task ;`;
+            Tasks ;`;
 
   const TaskArray = await db.all(TaskQuery);
   response.send(TaskArray);
@@ -140,7 +141,7 @@ app.get("/tasks/:id", authenticateToken, async (request, response) => {
         SELECT 
             * 
         FROM 
-            Task 
+            Tasks
             WHERE id = ${id};`;
 
   const TaskssArray = await db.get(TaskQuery);
@@ -148,67 +149,32 @@ app.get("/tasks/:id", authenticateToken, async (request, response) => {
 });
 
 // PUT /tasks/:id - Update a specific task by ID
-app.put("/tasks/:id", (req, res) => {
-  const taskId = parseInt(req.params.id);
-  const {
-    title,
-    description,
-    assignee_id,
-    status,
-    created_at,
-    updated_at,
-  } = req.body;
+// PUT /tasks/:id - Update a specific task by ID
+app.put("/tasks/:id", async (req, res) => {
+  const { id } = req.params;
+  const updateTaskQuery = `UPDATE Tasks SET status = "In Progress"
+    WHERE id = ${id}`;
 
-  // Find the task in the tasksData array by ID
-  const taskIndex = tasksData.findIndex((task) => task.id === taskId);
-
-  // If task is not found, return 404 Not Found
-  if (taskIndex === -1) {
-    return res.status(404).json({ message: "Task not found" });
+  try {
+    await db.run(updateTaskQuery);
+    res.send("Task updated successfully");
+  } catch (error) {
+    res.status(500).send("Error updating task");
   }
-
-  // Update the task with the new data
-  tasksData[taskIndex] = {
-    id: taskId,
-    title: title || tasksData[taskIndex].title,
-    description: description || tasksData[taskIndex].description,
-    assignee_id: assignee_id || tasksData[taskIndex].assignee_id,
-    status: status || tasksData[taskIndex].status,
-    created_at: created_at || tasksData[taskIndex].created_at,
-    updated_at: updated_at || new Date().toISOString(),
-  };
-
-  res.json(tasksData[taskIndex]);
 });
 
-// DELETE /tasks/:id - Delete a specific task by ID
-app.delete("/tasks/:id", (req, res) => {
-  const taskId = parseInt(req.params.id);
-
-  // Find the index of the task in the tasksData array by ID
-  const taskIndexx = tasksData.findIndex((task) => task.id === taskId);
-
-  // If task is not found, return 404 Not Found
-  if (taskIndexx === -1) {
-    return res.status(404).json({ message: "Task not found" });
-  }
-
-  // Remove the task from the tasksData array
-  const deletedTask = tasksData.splice(taskIndexx, 1);
-
-  res.json({ message: "Task deleted successfully", deletedTask });
-});
+// DELETE API
 
 app.delete("/tasks/:id", async (request, response) => {
   const { id } = request.params;
   const deleteTaskQuery = `
   DELETE FROM
-    Task
+    Tasks
   WHERE
     id = ${id};`;
 
-  await database.run(deleteTaskQuery);
-  response.send(" Deleted");
+  await db.run(deleteTaskQuery);
+  response.send("Deleted");
 });
 
 module.exports = app;
